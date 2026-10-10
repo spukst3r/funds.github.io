@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- A depot page has nothing to index, and data.json next to it would disclose holdings anyway. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- One theme-colour, kept in sync by app.js from --bg: a media-matched pair would report the OS colour after an
+         explicit override, which is exactly when it used to be wrong. -->
+    <meta name="theme-color" content="#f5f6f8" />
+    <title>Musterdepot</title>
+    <script type="module" crossorigin src="./assets/index.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index.css">
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <h1 id="depot-title">Musterdepot</h1>
+        <div class="tools">
+          <!-- Label and aria-label are rewritten by app.js: the chip names the theme you are looking at. -->
+          <button type="button" id="theme-toggle" class="chip" aria-label="Theme: light. Activate to switch to dark.">Light</button>
+        </div>
+      </header>
+
+      <main class="stack">
+        <div id="skeleton" class="stack" aria-hidden="true">
+          <div class="card">
+            <div class="skeleton line" style="width: 35%"></div>
+            <div class="skeleton line" style="width: 65%; height: 30px"></div>
+          </div>
+          <div class="card">
+            <div class="skeleton block"></div>
+          </div>
+        </div>
+
+        <div id="content" class="grid" hidden>
+          <div class="stack">
+            <section class="card summary" aria-labelledby="total-label">
+              <p class="label" id="total-label">Market value</p>
+              <!-- the only live region: re-sorting or changing range must not spam a screen reader -->
+              <p class="value" id="total" aria-live="polite">—</p>
+              <div class="pills" id="gain-pills"></div>
+              <p class="subline" id="session-line"></p>
+            </section>
+
+            <section class="card chart" aria-labelledby="chart-heading">
+              <div class="chart-head">
+                <h2 id="chart-heading">Price</h2>
+                <div class="chips" id="range-chips" role="group" aria-label="Chart time range"></div>
+              </div>
+              <div class="chart-body">
+                <canvas id="price-chart" role="img" aria-labelledby="chart-heading" aria-describedby="chart-table-caption"></canvas>
+              </div>
+              <p class="visually-hidden" id="chart-table-caption">Tabular alternative of the price chart.</p>
+              <div class="visually-hidden" id="chart-table"></div>
+            </section>
+          </div>
+
+          <section class="card holdings" aria-labelledby="holdings-heading">
+            <h2 id="holdings-heading">Holdings</h2>
+            <table id="holdings">
+              <caption class="visually-hidden" id="holdings-caption">Holdings, sorted by gain.</caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-key="name"><button type="button" class="sort" data-sort="name">Instrument</button></th>
+                  <th scope="col" data-key="value"><button type="button" class="sort" data-sort="value">Value</button></th>
+                  <th scope="col" data-key="weight" class="col-weight"><button type="button" class="sort" data-sort="weight">Weight</button></th>
+                  <th scope="col" data-key="gain" class="num"><button type="button" class="sort" data-sort="gain">Gain</button></th>
+                </tr>
+              </thead>
+              <tbody id="holdings-body"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <p id="empty-state" class="notice card" hidden>No data yet — run <code>npm run fetch</code>.</p>
+      </main>
+
+      <!-- The last update time and nothing else: how the file got there is a README concern. -->
+      <footer class="colophon">
+        <span id="updated"></span>
+      </footer>
+    </div>
+
+    <!-- Bundled from node_modules by Vite, no CDN: the page must work offline and only ever fetch ./data.json. -->
+  </body>
+</html>
